@@ -1,0 +1,34 @@
+﻿{
+  "Infrastructure": {
+    "Mongodb": "mongodb://10.1.20.143:27017",
+    "RabbitMQ": "host=10.1.20.140;username=admin;password=admin@ucsmy"
+  },
+  "Server": {
+    "Name": "Sikiro.SMS.Bus",
+    "DisplayName": "短信消费服务",
+    "Description": "短信消费服务"
+  },
+  "Sms": {
+    "SignName": "【钱端】",
+    "JianZhouSMS": {
+      "Account": "a",
+      "Password": "b",
+      "Url": "http://www.jianzhou.sh.cn/JianzhouSMSWSServer/http/sendBatchMessage",
+      "MaxCount": "3000"
+    },
+    "WoDongSMS": {
+      "Account": "a",
+      "Password": "b",
+      "Url": "http://client.movek.net:8888/sms.aspx",
+      "UserId": "a",
+      "MaxCount": "200"
+    },
+    "EXunTongSMS": {
+      "Account": "",
+      "Password": "6563898f5f67913430eec8fd45041059",
+      "Url": "http://112.74.139.4:8002/sms3_api/jsonapi/jsonrpc2.jsp",
+      "UserId": "202024",
+      "MaxCount": "1000"
+    }
+  }
+}

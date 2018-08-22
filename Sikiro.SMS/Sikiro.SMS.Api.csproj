@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.1\Sikiro.SMS.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ" Version="3.3.0" />
+    <PackageReference Include="EasyNetQ.DI.Microsoft" Version="3.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="NSwag.AspNetCore" Version="11.18.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sikiro.Model\Sikiro.Model.csproj" />
+    <ProjectReference Include="..\Sikiro.SMS.Toolkits\Sikiro.SMS.Toolkits.csproj" />
+    <ProjectReference Include="..\Sikiro.SMSService\Sikiro.SMSService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="QD.Framework">
+      <HintPath>..\Lib\QD.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="QD.Framework.MongoDb">
+      <HintPath>..\Lib\QD.Framework.MongoDb.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
