@@ -1,4 +1,4 @@
 ﻿@echo off
 cd %~dp0
-dotnet run action:install
+dotnet Sikiro.SMS.Job.dll action:install
 pause

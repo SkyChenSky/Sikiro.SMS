@@ -6,10 +6,9 @@ using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using PeterKottas.DotNetCore.WindowsService.Configurators.Service;
 using PeterKottas.DotNetCore.WindowsService.Interfaces;
-using QD.Framework;
-using QD.Framework.MongoDb;
-using QD.Framework.NoSql;
 using Quartz.Extension.Autofac;
+using Sikiro.Nosql.Mongo;
+using Sikiro.SMSService.Interfaces;
 
 namespace Sikiro.SMS.Bus
 {
@@ -42,7 +41,7 @@ namespace Sikiro.SMS.Bus
 
             builder.Register(r => Configuration).As<IConfiguration>().SingleInstance();
 
-            builder.Register(a => new MongoProxy(Configuration["Infrastructure:Mongodb"])).As<IMongoProxy>().SingleInstance();
+            builder.Register(a => new MongoRepository(Configuration["Infrastructure:Mongodb"])).SingleInstance();
 
             builder.RegisterAssemblyTypes(Assembly.Load("Sikiro.SMSService"))
                 .Where(t => t.GetInterfaces().Any(a => a == typeof(IService)))

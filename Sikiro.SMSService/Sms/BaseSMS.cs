@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using QD.Framework;
+using Sikiro.SMSService.Interfaces;
 
 namespace Sikiro.SMSService.Sms
 {

@@ -1,4 +1,4 @@
 ﻿@echo off
 cd %~dp0
-dotnet run action:install
+dotnet Sikiro.SMS.BUS.dll action:install
 pause

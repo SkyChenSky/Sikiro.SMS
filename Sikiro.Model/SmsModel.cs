@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
-using QD.Framework.NoSql;
+using Sikiro.Nosql.Mongo.Base;
 
 namespace Sikiro.Model
 {
+    [Mongo(MongoKey.SmsDataBase, MongoKey.SmsCollection)]
     public class SmsModel : MongoEntity
     {
         public string Content { get; set; }
@@ -20,6 +21,5 @@ namespace Sikiro.Model
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime? TimeSendDateTime { get; set; }
-       
     }
 }

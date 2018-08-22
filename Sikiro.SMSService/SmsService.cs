@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
-using QD.Framework;
-using QD.Framework.NoSql;
 using Sikiro.Model;
+using Sikiro.Nosql.Mongo;
 using Sikiro.SMS.Toolkits;
+using Sikiro.SMSService.Interfaces;
 using Sikiro.SMSService.Model;
 using Sikiro.SMSService.Sms;
 
@@ -15,13 +15,13 @@ namespace Sikiro.SMSService
     {
         private readonly SmsFactory _smsFactory;
         private readonly IConfiguration _configuration;
-        private readonly IMongoProxy _mongoProxy;
+        private readonly MongoRepository _mongoProxy;
 
         public List<SmsModel> SmsList { get; set; }
 
         public SmsModel Sms { get; set; }
 
-        public SmsService(SmsFactory smsFactory, IConfiguration configuration, IMongoProxy mongoProxy)
+        public SmsService(SmsFactory smsFactory, IConfiguration configuration, MongoRepository mongoProxy)
         {
             _smsFactory = smsFactory;
             _configuration = configuration;
@@ -30,7 +30,7 @@ namespace Sikiro.SMSService
 
         public SmsService GetToBeSend()
         {
-            Sms = _mongoProxy.FindOneAndUpdate<SmsModel>(MongoKey.SmsDataBase, MongoKey.SmsCollection,
+            Sms = _mongoProxy.GetAndUpdate<SmsModel>(
                 a => a.Status == SmsEnums.SmsStatus.待处理 && a.TimeSendDateTime <= DateTime.Now,
                 a => new SmsModel { Status = SmsEnums.SmsStatus.处理中 });
             return this;
@@ -38,7 +38,7 @@ namespace Sikiro.SMSService
 
         public SmsService Get(string id)
         {
-            Sms = _mongoProxy.Get<SmsModel>(MongoKey.SmsDataBase, MongoKey.SmsCollection, a => a._id == id);
+            Sms = _mongoProxy.Get<SmsModel>(a => a.Id == id);
             return this;
         }
 
@@ -54,9 +54,9 @@ namespace Sikiro.SMSService
 
             var isSuccess = _smsFactory.Create(item.Type).SendSMS(item.Mobiles, item.Content, _configuration["Sms:SignName"]);
             if (isSuccess)
-                Success(item._id);
+                Success(item.Id);
             else
-                Fail(item._id);
+                Fail(item.Id);
         }
 
         public void ContinueDo(Action todo)
@@ -94,7 +94,7 @@ namespace Sikiro.SMSService
 
             SmsList = smsModel;
 
-            _mongoProxy.InsertManyAsync(MongoKey.SmsDataBase, MongoKey.SmsCollection, SmsList);
+            _mongoProxy.BatchAddAsync(SmsList);
         }
 
         public void Search(SearchSmsModel searchSmsModel)
@@ -124,29 +124,29 @@ namespace Sikiro.SMSService
                     builder.And(a => a.Mobiles.Contains(searchSmsModel.Mobile));
             }
 
-            SmsList = _mongoProxy.ToList(MongoKey.SmsDataBase, MongoKey.SmsCollection, builder);
+            SmsList = _mongoProxy.ToList(builder);
         }
 
         public void RollBack()
         {
-            RollBack(Sms._id);
+            RollBack(Sms.Id);
         }
 
         public void RollBack(string id)
         {
-            _mongoProxy.UpdateMany<SmsModel>(MongoKey.SmsDataBase, MongoKey.SmsCollection, a => a._id == id,
+            _mongoProxy.Update<SmsModel>(a => a.Id == id,
                 a => new SmsModel { Status = SmsEnums.SmsStatus.待处理 });
         }
 
         private void Success(string id)
         {
-            _mongoProxy.UpdateMany<SmsModel>(MongoKey.SmsDataBase, MongoKey.SmsCollection, a => a._id == id,
+            _mongoProxy.Update<SmsModel>(a => a.Id == id,
                 a => new SmsModel { Status = SmsEnums.SmsStatus.成功 });
         }
 
         private void Fail(string id)
         {
-            _mongoProxy.UpdateMany<SmsModel>(MongoKey.SmsDataBase, MongoKey.SmsCollection, a => a._id == id,
+            _mongoProxy.Update<SmsModel>(a => a.Id == id,
                 a => new SmsModel { Status = SmsEnums.SmsStatus.失败 });
         }
 

@@ -1,6 +1,6 @@
-﻿using QD.Framework;
-using Sikiro.Model;
+﻿using Sikiro.Model;
 using Sikiro.SMSService.Base;
+using Sikiro.SMSService.Interfaces;
 
 namespace Sikiro.SMSService.Sms
 {

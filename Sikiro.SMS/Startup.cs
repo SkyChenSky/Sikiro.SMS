@@ -6,8 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NJsonSchema;
 using NSwag.AspNetCore;
-using QD.Framework.MongoDb;
-using QD.Framework.NoSql;
+using Sikiro.Nosql.Mongo;
 using Sikiro.SMS.Api.Helper;
 
 namespace Sikiro.SMS.Api
@@ -33,7 +32,7 @@ namespace Sikiro.SMS.Api
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.RegisterEasyNetQ(_infrastructureConfig.Infrastructure.RabbitMQ);
-            services.AddSingleton<IMongoProxy>(new MongoProxy(_infrastructureConfig.Infrastructure.Mongodb));
+            services.AddSingleton(new MongoRepository(_infrastructureConfig.Infrastructure.Mongodb));
             services.AddService();
         }
 

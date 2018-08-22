@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-using QD.Framework;
+using Sikiro.SMSService.Interfaces;
 
 namespace Sikiro.SMS.Api.Helper
 {

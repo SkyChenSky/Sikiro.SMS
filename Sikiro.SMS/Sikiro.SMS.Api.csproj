@@ -17,6 +17,7 @@
     <PackageReference Include="EasyNetQ.DI.Microsoft" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="NSwag.AspNetCore" Version="11.18.6" />
+    <PackageReference Include="Sikiro.Nosql.Mongo" Version="1.1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
