@@ -14,9 +14,6 @@
     <Reference Include="MongoDB.Bson">
       <HintPath>..\Lib\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="QD.Framework">
-      <HintPath>..\Lib\QD.Framework.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

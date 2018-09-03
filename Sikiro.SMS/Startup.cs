@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+using EasyNetQ.Scheduling;
+using log4net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,8 +33,11 @@ namespace Sikiro.SMS.Api
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.RegisterEasyNetQ(_infrastructureConfig.Infrastructure.RabbitMQ);
+            services.AddHttpContextAccessor();
+            services.RegisterEasyNetQ(_infrastructureConfig.Infrastructure.RabbitMQ, a =>
+            {
+                a.EnableDeadLetterExchangeAndMessageTtlScheduler();
+            });
             services.AddSingleton(new MongoRepository(_infrastructureConfig.Infrastructure.Mongodb));
             services.AddService();
         }
@@ -50,7 +56,7 @@ namespace Sikiro.SMS.Api
                settings.PostProcess = document =>
                {
                    document.Info.Version = "v1";
-                   document.Info.Title = "QD.SMS.API";
+                   document.Info.Title = Assembly.GetExecutingAssembly().GetName(true).Name;
                    document.Info.Description = "短信服务API";
                    document.Info.TermsOfService = "None";
                };

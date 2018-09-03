@@ -30,12 +30,6 @@
     <Reference Include="MongoDB.Driver.Core">
       <HintPath>..\Lib\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
-    <Reference Include="QD.Framework">
-      <HintPath>..\Lib\QD.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="QD.Framework.MongoDb">
-      <HintPath>..\Lib\QD.Framework.MongoDb.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
