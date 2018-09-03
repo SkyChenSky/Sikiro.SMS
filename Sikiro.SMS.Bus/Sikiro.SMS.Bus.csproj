@@ -23,15 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="QD.Framework">
-      <HintPath>..\Lib\QD.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="QD.Framework.MongoDb">
-      <HintPath>..\Lib\QD.Framework.MongoDb.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

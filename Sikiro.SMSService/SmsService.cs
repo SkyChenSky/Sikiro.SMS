@@ -94,7 +94,7 @@ namespace Sikiro.SMSService
 
             SmsList = smsModel;
 
-            _mongoProxy.BatchAddAsync(SmsList);
+            _mongoProxy.BatchAdd(SmsList);
         }
 
         public void Search(SearchSmsModel searchSmsModel)

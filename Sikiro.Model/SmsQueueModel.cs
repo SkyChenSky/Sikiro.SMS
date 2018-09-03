@@ -6,7 +6,7 @@ namespace Sikiro.Model
     [Queue(SmsQueueModelKey.Queue, ExchangeName = SmsQueueModelKey.Exchange)]
     public class SmsQueueModel
     {
-        public string _id { get; set; }
+        public string Id { get; set; }
 
         public string Content { get; set; }
 
