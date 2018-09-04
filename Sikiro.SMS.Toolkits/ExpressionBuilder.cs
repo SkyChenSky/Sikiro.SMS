@@ -20,51 +20,46 @@ namespace Sikiro.SMS.Toolkits
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first,
             Expression<Func<T, bool>> second)
         {
-            return first.Compose(second, Expression.AndAlso);
+            return Merge(first, second, Expression.AndAlso);
         }
 
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first,
             Expression<Func<T, bool>> second)
         {
-            return first.Compose(second, Expression.OrElse);
+            return Merge(first, second, Expression.OrElse);
         }
 
-        private static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second,
-            Func<Expression, Expression, Expression> merge
-        )
+        private static Expression<T> Merge<T>(Expression<T> oldExpression, Expression<T> newExpression, Func<Expression, Expression, Expression> combineType)
         {
-            var map = first.Parameters
-                .Select((f, i) => new { f, s = second.Parameters[i] })
-                .ToDictionary(p => p.s, p => p.f);
+            var afterRebindNewExpression = ParameterRebinder<T>.ReplaceParameters(oldExpression, newExpression);
 
-            var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
-
-            return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+            return Expression.Lambda<T>(combineType(oldExpression.Body, afterRebindNewExpression), oldExpression.Parameters);
         }
     }
-    internal class ParameterRebinder : ExpressionVisitor
+    internal class ParameterRebinder<T> : ExpressionVisitor
     {
-        readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap;
+        private readonly Dictionary<ParameterExpression, ParameterExpression> _parameterMap;
 
-        ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+        ParameterRebinder(Expression<T> oldExpression, Expression<T> newExpression)
         {
-            _parameterMap = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+            _parameterMap = oldExpression.Parameters
+                .Select((f, i) => new { f, s = newExpression.Parameters[i] })
+                .ToDictionary(p => p.s, p => p.f);
         }
 
-        public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map,
-            Expression exp)
+        public static Expression ReplaceParameters(Expression<T> oldExpression, Expression<T> newExpression)
         {
-            return new ParameterRebinder(map).Visit(exp);
+            return new ParameterRebinder<T>(oldExpression, newExpression).Visit(newExpression.Body);
         }
 
-        protected override Expression VisitParameter(ParameterExpression p)
+        protected override Expression VisitParameter(ParameterExpression newParameter)
         {
-            if (_parameterMap.TryGetValue(p, out var replacement))
+            if (_parameterMap.TryGetValue(newParameter, out var replacement))
             {
-                p = replacement;
+                newParameter = replacement;
             }
 
-            return base.VisitParameter(p);
+            return base.VisitParameter(newParameter);
         }
     }
 }
