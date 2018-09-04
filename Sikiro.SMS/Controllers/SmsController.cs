@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EasyNetQ;
+using EasyNetQ.Scheduling;
 using Microsoft.AspNetCore.Mvc;
 using Sikiro.Model;
 using Sikiro.SMS.Api.Model.Sms;
@@ -49,13 +51,22 @@ namespace Sikiro.SMS.Api.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] List<PostModel> model)
         {
-            _smsService.Add(model.MapTo<List<PostModel>, List<AddSmsModel>>());
+            var allSmsList = _smsService.Page(model.MapTo<List<PostModel>, List<AddSmsModel>>()).SmsList;
 
-            _smsService.SmsList.Where(a => a.TimeSendDateTime == null)
-                .ToList().MapTo<List<SmsModel>, List<SmsQueueModel>>().ForEach(item =>
-                {
-                    _bus.Publish(item);
-                });
+            allSmsList.Where(a => a.TimeSendDateTime == null).ToList().MapTo<List<SmsModel>, List<SmsQueueModel>>()
+                .ForEach(
+                    item =>
+                    {
+                        _bus.Publish(item, SmsQueueModelKey.Topic);
+                    });
+
+            allSmsList.Where(a => a.TimeSendDateTime != null).ToList()
+                .ForEach(
+                    item =>
+                    {
+                        _bus.FuturePublish(item.TimeSendDateTime.Value.ToUniversalTime(), item.MapTo<SmsModel, SmsQueueModel>(),
+                            SmsQueueModelKey.Topic);
+                    });
 
             return Ok();
         }

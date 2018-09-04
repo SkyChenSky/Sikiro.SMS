@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Autofac;
+using EasyNetQ.Scheduling;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
@@ -48,7 +49,10 @@ namespace Sikiro.SMS.Bus
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<MainService>().SingleInstance();
-            builder.RegisterEasyNetQ(Configuration["Infrastructure:RabbitMQ"]);
+            builder.RegisterEasyNetQ(Configuration["Infrastructure:RabbitMQ"], config =>
+            {
+                config.EnableDeadLetterExchangeAndMessageTtlScheduler();
+            });
 
             Container = builder.Build();
         }

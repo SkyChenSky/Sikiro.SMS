@@ -21,5 +21,7 @@ namespace Sikiro.Model
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime? TimeSendDateTime { get; set; }
+
+        public int SendCount { get; set; }
     }
 }
