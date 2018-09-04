@@ -103,25 +103,25 @@ namespace Sikiro.SMSService
             if (searchSmsModel != null)
             {
                 if (searchSmsModel.Status.HasValue)
-                    builder.And(a => a.Status == searchSmsModel.Status.Value);
+                    builder = builder.And(a => a.Status == searchSmsModel.Status.Value);
 
                 if (searchSmsModel.Type.HasValue)
-                    builder.And(a => a.Type == searchSmsModel.Type.Value);
+                    builder = builder.And(a => a.Type == searchSmsModel.Type.Value);
 
                 if (searchSmsModel.BeganCreateDateTime.HasValue)
-                    builder.And(a => a.CreateDateTime >= searchSmsModel.BeganCreateDateTime.Value);
+                    builder = builder.And(a => a.CreateDateTime >= searchSmsModel.BeganCreateDateTime.Value);
 
                 if (searchSmsModel.EndCreateDateTime.HasValue)
-                    builder.And(a => a.CreateDateTime <= searchSmsModel.EndCreateDateTime.Value);
+                    builder = builder.And(a => a.CreateDateTime <= searchSmsModel.EndCreateDateTime.Value);
 
                 if (searchSmsModel.BeganTimeSendDateTime.HasValue)
-                    builder.And(a => a.TimeSendDateTime >= searchSmsModel.BeganTimeSendDateTime.Value);
+                    builder = builder.And(a => a.TimeSendDateTime >= searchSmsModel.BeganTimeSendDateTime.Value);
 
                 if (searchSmsModel.EndTimeSendDateTime.HasValue)
-                    builder.And(a => a.TimeSendDateTime <= searchSmsModel.EndTimeSendDateTime.Value);
+                    builder = builder.And(a => a.TimeSendDateTime <= searchSmsModel.EndTimeSendDateTime.Value);
 
                 if (!string.IsNullOrEmpty(searchSmsModel.Mobile))
-                    builder.And(a => a.Mobiles.Contains(searchSmsModel.Mobile));
+                    builder = builder.And(a => a.Mobiles.Contains(searchSmsModel.Mobile));
             }
 
             SmsList = _mongoProxy.ToList(builder);
