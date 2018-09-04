@@ -122,6 +122,9 @@ namespace Sikiro.SMSService
 
                 if (!string.IsNullOrEmpty(searchSmsModel.Mobile))
                     builder = builder.And(a => a.Mobiles.Contains(searchSmsModel.Mobile));
+
+                if (!string.IsNullOrEmpty(searchSmsModel.Content))
+                    builder = builder.And(a => a.Content.Contains(searchSmsModel.Content));
             }
 
             SmsList = _mongoProxy.ToList(builder);
