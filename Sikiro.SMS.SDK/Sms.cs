@@ -8,6 +8,9 @@ using Sikiro.SMS.SDK.Model;
 
 namespace Sikiro.SMS.SDK
 {
+    /// <summary>
+    /// 短信服务SDK
+    /// </summary>
     public static class Sms
     {
         private static RestClient _client;
@@ -20,6 +23,11 @@ namespace Sikiro.SMS.SDK
             _client = new RestClient(Host);
         }
 
+        /// <summary>
+        /// 批量发送短信（异步）
+        /// </summary>
+        /// <param name="sendList"></param>
+        /// <returns></returns>
         public static async Task<Response> SendAsync(List<SendEntity> sendList)
         {
             var request = new RestRequest("sms", Method.POST) { RequestFormat = DataFormat.Json };
@@ -31,11 +39,21 @@ namespace Sikiro.SMS.SDK
             return ToResponse(response);
         }
 
+        /// <summary>
+        /// 单条发送短信（异步）
+        /// </summary>
+        /// <param name="sendEntity"></param>
+        /// <returns></returns>
         public static async Task<Response> SendAsync(SendEntity sendEntity)
         {
             return await SendAsync(new List<SendEntity> { sendEntity });
         }
 
+        /// <summary>
+        /// 批量发送短信（同步）
+        /// </summary>
+        /// <param name="sendList"></param>
+        /// <returns></returns>
         public static Response Send(List<SendEntity> sendList)
         {
             var request = new RestRequest("sms", Method.POST) { RequestFormat = DataFormat.Json };
@@ -47,11 +65,21 @@ namespace Sikiro.SMS.SDK
             return ToResponse(response);
         }
 
+        /// <summary>
+        /// 单条发送短信（异步）
+        /// </summary>
+        /// <param name="sendEntity"></param>
+        /// <returns></returns>
         public static Response Send(SendEntity sendEntity)
         {
             return Send(new List<SendEntity> { sendEntity });
         }
 
+        /// <summary>
+        /// 获取单个SMS记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Response<SearchResponse> Get(string id)
         {
             var request = new RestRequest("sms/{id}", Method.GET);
@@ -63,11 +91,15 @@ namespace Sikiro.SMS.SDK
             return ToResponse(response);
         }
 
+        /// <summary>
+        /// 查询SMS记录
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <returns></returns>
         public static Response<List<SearchResponse>> Search(SearchEntity searchModel)
         {
             var request = new RestRequest("sms/_search", Method.POST) { RequestFormat = DataFormat.Json };
             request.AddBody(searchModel);
-
 
             var response = _client.Execute<List<SearchResponse>>(request);
 
@@ -76,14 +108,14 @@ namespace Sikiro.SMS.SDK
 
         private static Response<T> ToResponse<T>(IRestResponse<T> t)
         {
-            var msg = t.StatusCode == HttpStatusCode.OK ? "OK" : t.Content;
-            return new Response<T> { Body = t.Data, StateCode = t.StatusCode, Message = t.ErrorMessage ?? msg };
+            var msg = t.IsSuccessful ? t.StatusCode.ToString() : t.Content;
+            return new Response<T> { Body = t.Data, StateCode = t.StatusCode, Message = t.ErrorMessage ?? msg, IsSuccess = t.IsSuccessful };
         }
 
         private static Response ToResponse(IRestResponse t)
         {
-            var msg = t.StatusCode == HttpStatusCode.OK ? "OK" : t.Content;
-            return new Response { StateCode = t.StatusCode, Message = t.ErrorMessage ?? msg };
+            var msg = t.IsSuccessful ? t.StatusCode.ToString() : t.Content;
+            return new Response { StateCode = t.StatusCode, Message = t.ErrorMessage ?? msg, IsSuccess = t.IsSuccessful };
         }
     }
 

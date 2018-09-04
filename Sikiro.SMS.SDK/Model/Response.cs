@@ -13,7 +13,7 @@ namespace Sikiro.SMS.SDK.Model
 
         public HttpStatusCode StateCode { get; set; }
 
-        public bool IsSuccess => StateCode == HttpStatusCode.OK;
+        public bool IsSuccess { get; set; }
 
     }
 }
