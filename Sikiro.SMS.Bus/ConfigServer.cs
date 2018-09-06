@@ -7,7 +7,6 @@ using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using PeterKottas.DotNetCore.WindowsService.Configurators.Service;
 using PeterKottas.DotNetCore.WindowsService.Interfaces;
-using Quartz.Extension.Autofac;
 using Sikiro.Nosql.Mongo;
 using Sikiro.SMSService.Interfaces;
 
@@ -37,8 +36,6 @@ namespace Sikiro.SMS.Bus
         public static void UseAutofac(this ServiceConfigurator<MainService> svc)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new QuartzAutofacFactoryModule());
-            builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MainService).Assembly));
 
             builder.Register(r => Configuration).As<IConfiguration>().SingleInstance();
 
