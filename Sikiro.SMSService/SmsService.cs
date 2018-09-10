@@ -114,14 +114,14 @@ namespace Sikiro.SMSService
         {
             model.Status = SmsEnums.SmsStatus.成功;
             model.CreateDateTime = DateTime.Now;
-            _mongoProxy.Add(model);
+            _mongoProxy.Add(MongoKey.SmsDataBase, MongoKey.SmsCollection + "_" + DateTime.Now.ToString("yyyyMM"), model);
         }
 
         private void Fail(SmsModel model)
         {
             model.Status = SmsEnums.SmsStatus.失败;
             model.CreateDateTime = DateTime.Now;
-            _mongoProxy.Add(model);
+            _mongoProxy.Add(MongoKey.SmsDataBase, MongoKey.SmsCollection + "_" + DateTime.Now.ToString("yyyyMM"), model);
         }
 
         private int GetPageCount(int phoneCount, int maxCount)
