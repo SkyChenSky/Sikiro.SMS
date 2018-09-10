@@ -34,6 +34,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sikiro.SMS.Api.LoadTest", "Sikiro.SMS.Api.LoadTest\Sikiro.SMS.Api.LoadTest.csproj", "{506C9F8B-48F0-48FF-BA8B-6F6386564205}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99.超时死信demo", "99.超时死信demo", "{E90EDDCB-3067-4729-8DAA-D26F55B732EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQ.Publish", "MQ.Publish\MQ.Publish.csproj", "{C2ECC42E-EC4B-4DD3-8EE6-F2516EE6C2C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +76,10 @@ Global
 		{506C9F8B-48F0-48FF-BA8B-6F6386564205}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{506C9F8B-48F0-48FF-BA8B-6F6386564205}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{506C9F8B-48F0-48FF-BA8B-6F6386564205}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2ECC42E-EC4B-4DD3-8EE6-F2516EE6C2C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2ECC42E-EC4B-4DD3-8EE6-F2516EE6C2C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2ECC42E-EC4B-4DD3-8EE6-F2516EE6C2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2ECC42E-EC4B-4DD3-8EE6-F2516EE6C2C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +92,7 @@ Global
 		{E4ED3127-5244-41E4-B966-91E8D3586983} = {BB9583DE-99E1-4B5F-8E75-8D5014492693}
 		{3AA131F6-0858-435B-83DA-CB2FF77EE4A0} = {0F753C0D-1E17-4853-A0C3-7F960A1ABF64}
 		{506C9F8B-48F0-48FF-BA8B-6F6386564205} = {0F753C0D-1E17-4853-A0C3-7F960A1ABF64}
+		{C2ECC42E-EC4B-4DD3-8EE6-F2516EE6C2C9} = {E90EDDCB-3067-4729-8DAA-D26F55B732EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29CD5C9D-EB91-4995-A615-52F036A93025}
