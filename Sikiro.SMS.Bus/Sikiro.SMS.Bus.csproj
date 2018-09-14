@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Sikiro.SMS.Toolkits\Sikiro.SMS.Toolkits.csproj" />
     <ProjectReference Include="..\Sikiro.SMSService\Sikiro.SMSService.csproj" />
-    <ProjectReference Include="..\Quartz.Extension.Autofac\Quartz.Extension.Autofac.csproj" />
   </ItemGroup>
 
   <ItemGroup>

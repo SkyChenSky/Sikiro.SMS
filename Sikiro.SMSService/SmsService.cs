@@ -28,23 +28,9 @@ namespace Sikiro.SMSService
             _mongoProxy = mongoProxy;
         }
 
-        public SmsService GetToBeSend()
-        {
-            Sms = _mongoProxy.GetAndUpdate<SmsModel>(
-                a => a.Status == SmsEnums.SmsStatus.待处理 && a.TimeSendDateTime <= DateTime.Now,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.处理中 });
-            return this;
-        }
-
         public SmsService Get(string id)
         {
             Sms = _mongoProxy.Get<SmsModel>(a => a.Id == id);
-            return this;
-        }
-
-        public SmsService Send()
-        {
-            Send(Sms);
             return this;
         }
 
@@ -54,18 +40,12 @@ namespace Sikiro.SMSService
 
             var isSuccess = _smsFactory.Create(item.Type).SendSMS(item.Mobiles, item.Content, _configuration["Sms:SignName"]);
             if (isSuccess)
-                Success(item.Id);
+                Success(item);
             else
-                Fail(item.Id);
+                Fail(item);
         }
 
-        public void ContinueDo(Action todo)
-        {
-            if (Sms != null)
-                todo();
-        }
-
-        public void Add(List<AddSmsModel> smsModels)
+        public SmsService Page(List<AddSmsModel> smsModels)
         {
             DateTime now = DateTime.Now;
 
@@ -94,7 +74,7 @@ namespace Sikiro.SMSService
 
             SmsList = smsModel;
 
-            _mongoProxy.BatchAdd(SmsList);
+            return this;
         }
 
         public void Search(SearchSmsModel searchSmsModel)
@@ -130,27 +110,18 @@ namespace Sikiro.SMSService
             SmsList = _mongoProxy.ToList(builder);
         }
 
-        public void RollBack()
+        private void Success(SmsModel model)
         {
-            RollBack(Sms.Id);
+            model.Status = SmsEnums.SmsStatus.成功;
+            model.CreateDateTime = DateTime.Now;
+            _mongoProxy.Add(MongoKey.SmsDataBase, MongoKey.SmsCollection + "_" + DateTime.Now.ToString("yyyyMM"), model);
         }
 
-        public void RollBack(string id)
+        private void Fail(SmsModel model)
         {
-            _mongoProxy.Update<SmsModel>(a => a.Id == id,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.待处理 });
-        }
-
-        private void Success(string id)
-        {
-            _mongoProxy.Update<SmsModel>(a => a.Id == id,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.成功 });
-        }
-
-        private void Fail(string id)
-        {
-            _mongoProxy.Update<SmsModel>(a => a.Id == id,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.失败 });
+            model.Status = SmsEnums.SmsStatus.失败;
+            model.CreateDateTime = DateTime.Now;
+            _mongoProxy.Add(MongoKey.SmsDataBase, MongoKey.SmsCollection + "_" + DateTime.Now.ToString("yyyyMM"), model);
         }
 
         private int GetPageCount(int phoneCount, int maxCount)

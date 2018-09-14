@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net;
 using EasyNetQ;
+using EasyNetQ.Scheduling;
 using PeterKottas.DotNetCore.WindowsService.Interfaces;
 using Sikiro.Model;
 using Sikiro.SMS.Toolkits;
@@ -28,12 +30,27 @@ namespace Sikiro.SMS.Bus
                 {
                     _smsService.Send(msg.MapTo<SmsQueueModel, SmsModel>());
                 }
+                catch (WebException e)
+                {
+                    e.WriteToFile();
+                    ReSend();
+                }
                 catch (Exception e)
                 {
-                    _smsService.RollBack();
                     e.WriteToFile();
                 }
+            }, a =>
+            {
+                a.WithTopic(SmsQueueModelKey.Topic);
             });
+        }
+
+        private void ReSend()
+        {
+            var model = _smsService.Sms.MapTo<SmsModel, SmsQueueModel>();
+            model.SendCount++;
+
+            _bus.FuturePublish(TimeSpan.FromSeconds(30 * model.SendCount), model, SmsQueueModelKey.Topic);
         }
 
         public void Stop()
