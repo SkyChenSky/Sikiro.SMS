@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using EasyNetQ;
 using EasyNetQ.Scheduling;
 using PeterKottas.DotNetCore.WindowsService.Interfaces;
@@ -29,10 +30,9 @@ namespace Sikiro.SMS.Bus
                 {
                     _smsService.Send(msg.MapTo<SmsQueueModel, SmsModel>());
                 }
-                catch (TimeoutException e)
+                catch (WebException e)
                 {
                     e.WriteToFile();
-
                     ReSend();
                 }
                 catch (Exception e)
