@@ -42,12 +42,6 @@ namespace Sikiro.SMSService
             return this;
         }
 
-        public SmsService Send()
-        {
-            Send(Sms);
-            return this;
-        }
-
         public void Send(SmsModel item)
         {
             Sms = item;
@@ -59,6 +53,29 @@ namespace Sikiro.SMSService
                 Fail(item.Id);
         }
 
+        public void RollBack()
+        {
+            RollBack(Sms.Id);
+        }
+
+        public void RollBack(string id)
+        {
+            _mongoProxy.Update<SmsModel>(a => a.Id == id,
+                a => new SmsModel { Status = SmsEnums.SmsStatus.待处理 });
+        }
+
+        private void Success(string id)
+        {
+            _mongoProxy.Update<SmsModel>(a => a.Id == id,
+                a => new SmsModel { Status = SmsEnums.SmsStatus.成功 });
+        }
+
+        private void Fail(string id)
+        {
+            _mongoProxy.Update<SmsModel>(a => a.Id == id,
+                a => new SmsModel { Status = SmsEnums.SmsStatus.失败 });
+        }
+
         public void ContinueDo(Action todo)
         {
             if (Sms != null)
@@ -67,7 +84,7 @@ namespace Sikiro.SMSService
 
         public void Add(List<AddSmsModel> smsModels)
         {
-            DateTime now = DateTime.Now;
+            var now = DateTime.Now;
 
             var smsModel = new List<SmsModel>();
             foreach (var sms in smsModels)
@@ -128,29 +145,6 @@ namespace Sikiro.SMSService
             }
 
             SmsList = _mongoProxy.ToList(builder);
-        }
-
-        public void RollBack()
-        {
-            RollBack(Sms.Id);
-        }
-
-        public void RollBack(string id)
-        {
-            _mongoProxy.Update<SmsModel>(a => a.Id == id,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.待处理 });
-        }
-
-        private void Success(string id)
-        {
-            _mongoProxy.Update<SmsModel>(a => a.Id == id,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.成功 });
-        }
-
-        private void Fail(string id)
-        {
-            _mongoProxy.Update<SmsModel>(a => a.Id == id,
-                a => new SmsModel { Status = SmsEnums.SmsStatus.失败 });
         }
 
         private int GetPageCount(int phoneCount, int maxCount)
