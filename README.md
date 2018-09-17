@@ -1,6 +1,9 @@
 # Sikiro.SMS
 This is the SMS Service with .net core.
 
+## Bolg
+https://www.cnblogs.com/skychen1218/p/9644475.html
+
 ## Getting Started
 
 ### Run the SMS.API
